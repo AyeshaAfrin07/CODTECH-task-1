@@ -1,0 +1,76 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+titanic_data = pd.read_csv('Titanic-Dataset.csv')
+print(titanic_data.head())
+print(titanic_data.describe())
+print(titanic_data.info())
+print(titanic_data.isnull().sum())
+
+plt.figure(figsize=(4,3))
+sns.countplot(x='Survived', data=titanic_data)
+plt.title('Survival Count')
+plt.show()
+
+plt.figure(figsize=(7, 5))
+sns.histplot(titanic_data['Age'].dropna(), bins=30, kde=True)
+plt.title('Distribution of Age')
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.show()
+
+plt.figure(figsize=(7, 6))
+sns.histplot(titanic_data['Fare'], bins=30, kde=True)
+plt.title('Distribution of Fare')
+plt.xlabel('Fare')
+plt.ylabel('Count')
+plt.show()
+
+plt.figure(figsize=(5, 5))
+sns.boxplot(x='Survived', y='Age', data=titanic_data)
+plt.title('Age Distribution by Survival')
+plt.show()
+
+plt.figure(figsize=(5, 5))
+sns.boxplot(x='Pclass', y='Fare', data=titanic_data)
+plt.title('Fare Distribution by Passenger Class')
+plt.show()
+
+titanic_data['Name'] = pd.to_numeric(titanic_data['Name'], errors='coerce')
+titanic_data['Ticket'] = pd.to_numeric(titanic_data['Ticket'], errors='coerce')
+titanic_data['Embarked'] = pd.to_numeric(titanic_data['Embarked'], errors='coerce')
+
+titanic_data['Name'].fillna(titanic_data['Name'].median(), inplace=True)
+titanic_data['Ticket'].fillna(titanic_data['Ticket'].median(), inplace=True)
+titanic_data['Embarked'].fillna(titanic_data['Embarked'].median(), inplace=True)
+
+correlation_matrix = titanic_data.corr()
+plt.figure(figsize=(6, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5)
+plt.title('Correlation Matrix of Titanic Dataset')
+plt.show()
+
+plt.figure(figsize=(5,5))
+sns.scatterplot(x='Age', y='Fare', hue='Survived', data=titanic_data)
+plt.title('Scatter Plot of Age vs. Fare colored by Survival')
+plt.show()
+
+plt.figure(figsize=(5, 5))
+sns.boxplot(x='Age', data=titanic_data)
+plt.title('Boxplot of Age')
+plt.show()
+
+plt.figure(figsize=(5, 5))
+sns.boxplot(x='Fare', data=titanic_data)
+plt.title('Boxplot of Fare')
+plt.show()
+
+class_survived = pd.crosstab(index=titanic_data['Pclass'], columns=titanic_data['Survived'])
+plt.figure(figsize=(8, 6))
+sns.heatmap(class_survived, annot=True, cmap='coolwarm', fmt='d', linewidths=.5)
+plt.title('Count of Passengers by Class and Survival')
+plt.xlabel('Survived')
+plt.ylabel('Pclass')
+plt.show()
